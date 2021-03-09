@@ -1,6 +1,6 @@
 <template>
   <div class="pageBox">
-    <div class="cont" style="display: none">
+    <div class="cont" v-if="isZiCompany">
       <div class="title"><i class="el-icon-info"></i>课程收益情况</div>
       <div class="lineDiv">
         <p class="p1">课程总收益：</p>
@@ -20,68 +20,94 @@
         >
       </div>
     </div>
-    <el-table
-      ref="multipleTable"
-      :data="tableData"
-      tooltip-effect="dark"
-      style="width: 100%"
-    >
-      <el-table-column label="序号"  type="index">
-        <!-- <template slot-scope="scope">{{ scope.row.date }}</template> -->
-      </el-table-column>
-      <el-table-column prop="name" label="子公司名称"> </el-table-column>
-      <el-table-column prop="money_1" label="课程总收益"> </el-table-column>
-      <el-table-column prop="money_2" label="待提现金额"> </el-table-column>
-      
-      <el-table-column prop="name" label="操作"  >
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="modifyFun(scope.row)"
-            >修改</el-button
-          >
-          <el-button  type="text" size="small" @click="dimissionFun(scope.row)"
-            >离职</el-button
-          >
-          <el-button type="text" size="small" @click="deletFun(scope.row)"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-    <Pagination
-      v-show="tableData.length"
-      :total="total"
-      :currentpage="reqop.page"
-      :pagesize="reqop.limit"
-      @pagechange="pagechange"
-    />
+    <div v-if="!isZiCompany">
+      <el-table
+        ref="multipleTable"
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width: 100%"
+      >
+        <el-table-column label="序号" type="index">
+          <!-- <template slot-scope="scope">{{ scope.row.date }}</template> -->
+        </el-table-column>
+        <el-table-column prop="name" label="子公司名称"> </el-table-column>
+        <el-table-column prop="money_1" label="课程总收益"> </el-table-column>
+        <el-table-column prop="money_2" label="待提现金额"> </el-table-column>
+
+        <el-table-column prop="name" label="操作">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" @click="modifyFun(scope.row)"
+              >修改</el-button
+            >
+            <el-button type="text" size="small" @click="dimissionFun(scope.row)"
+              >离职</el-button
+            >
+            <el-button type="text" size="small" @click="deletFun(scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <Pagination
+        v-show="tableData.length"
+        :total="total"
+        :currentpage="reqop.page"
+        :pagesize="reqop.limit"
+        @pagechange="pagechange"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import Pagination from "../components/pagination";
 export default {
-  components:{
-    Pagination
+  components: {
+    Pagination,
   },
-  data(){
-    return{
-      tableData:[{
-        name:'公司名称',
-        money_1:'352.04',
-        money_2:'210.00',
-      }],
-      total:0,
-      reqop:{
-        page:1,
-        limit:10
-      }
-    }
+
+  data() {
+    return {
+      tableData: [
+        {
+          name: "公司名称",
+          money_1: "352.04",
+          money_2: "210.00",
+        },
+      ],
+      total: 0,
+      reqop: {
+        page: 1,
+        limit: 10,
+        sidx: "",
+        order: "",
+      },
+    };
+  },
+  computed: {
+    isZiCompany() {
+      return this.$store.getters["user/userInfo"]?.user?.role === 1; //1是子公司
+    },
+  },
+  mounted() {
+    console.log(this.$store.getters["user/userInfo"]?.user?.role === 1);
+    this.getData();
   },
   methods: {
-        pagechange(val) {
+    getData() {
+      this.$net
+        .settleaccounts(this.reqop)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    pagechange(val) {
       this.reqop.page = val;
       this.tableData = [];
-      // this.getData();
+      this.getData();
     },
     withdrawFun() {
       alert("提现接口");

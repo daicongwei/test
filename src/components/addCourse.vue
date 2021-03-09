@@ -50,7 +50,8 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="课程封面图片" prop="teacher">
-            <el-upload
+            <Upfile :logo="ruleForm.logo" @fileChangeFun="fileChangeFun" />
+            <!-- <el-upload
               action="http://192.168.0.22:8080/sys/oss/upload"
               list-type="picture-card"
               :headers="headers"
@@ -62,7 +63,7 @@
               :fileList="fileList"
             >
               <i class="el-icon-plus"></i>
-            </el-upload>
+            </el-upload> -->
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')"
@@ -81,8 +82,12 @@
 </template>
 
 <script>
+import Upfile from "./upfile";
 export default {
   props: ["coursedata"],
+  components:{
+    Upfile
+  },
   data() {
     return {
       dialogImageUrl: "",
@@ -124,6 +129,10 @@ export default {
       : "";
   },
   methods: {
+     fileChangeFun(e){
+      // console.log(e);
+      this.ruleForm.courseImg = e
+    },
 
     handleRemove(file, fileList) {
       console.log(file, fileList);

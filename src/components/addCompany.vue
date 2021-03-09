@@ -35,12 +35,7 @@
               placeholder="请输入公司简介"
             ></el-input>
           </el-form-item>
-          <el-form-item label="公司logo图片地址" prop="logo">
-            <el-input
-              v-model="ruleForm.logo"
-              placeholder="请输入公司logo地址"
-            ></el-input>
-          </el-form-item>
+          
           <el-form-item label="公司账户" prop="companyAccount">
             <el-input
               v-model="ruleForm.companyAccount"
@@ -61,6 +56,14 @@
               placeholder="请输入利润分成比例,0到1之间"
             ></el-input>
           </el-form-item>
+          <el-form-item label="公司logo图片" required>
+            <!-- <el-input
+              v-model="ruleForm.logo"
+              placeholder="请输入公司logo地址"
+            ></el-input> -->
+            <Upfile :logo="ruleForm.logo" @fileChangeFun="fileChangeFun" />
+           
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')"
               >确定</el-button
@@ -80,7 +83,11 @@
 </template>
 
 <script>
+import Upfile from "./upfile";
 export default {
+  components:{
+    Upfile
+  },
   props: {
     companydata: {
       type: Object,
@@ -100,9 +107,9 @@ export default {
         introduction: [
           { required: true, message: "请输入公司简介", trigger: "blur" },
         ],
-        logo: [
-          { required: true, message: "请输入logo图片地址", trigger: "blur" },
-        ],
+        // logo: [
+        //   { required: true, message: "请输入logo图片地址", trigger: "blur" },
+        // ],
         companyAccount: [
           { required: true, message: "请输入公司账户", trigger: "blur" },
         ],
@@ -128,15 +135,23 @@ export default {
       },
     };
   },
-  mounted() {},
+   mounted() {
+    
+  },
 
   methods: {
+    fileChangeFun(e){
+      // console.log(e);
+      this.ruleForm.logo = e
+    },
+
     submitForm(ruleForm) {
       //  this.$utils.isPhone(this.ruleForm.mobile)
       let num = Number(this.ruleForm.profitSharing);
       if (num < 1 && num > 0) {
         this.$refs[ruleForm].validate((valid) => {
           if (valid) {
+            this.$utils.isempty(this.ruleForm.logo,'请上传公司logo')
             this.sumbit();
           } else {
             this.$utils.toast("公司信息不能为空");

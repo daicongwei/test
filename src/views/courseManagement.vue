@@ -123,7 +123,7 @@ export default {
   },
   computed:{
     isZiCompany(){
-      return this.$store.state.user?.userInfo?.user?.role === 1 //1是子公司
+      return this.$store.getters['user/userInfo']?.user?.role === 1 //1是子公司
     }
   },
   data() {

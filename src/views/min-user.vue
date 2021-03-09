@@ -19,7 +19,11 @@
           size="small"
           placeholder="请输入身份证号"
         ></el-input>
-        <el-button type="primary" size="small" icon="el-icon-search" @click="searchFun"
+        <el-button
+          type="primary"
+          size="small"
+          icon="el-icon-search"
+          @click="searchFun"
           >搜索</el-button
         >
       </div>
@@ -50,7 +54,7 @@
           <el-button type="text" size="small" @click="modifyFun(scope.row)"
             >修改</el-button
           >
-          <el-button  type="text" size="small" @click="dimissionFun(scope.row)"
+          <el-button type="text" size="small" @click="dimissionFun(scope.row)"
             >离职</el-button
           >
           <el-button type="text" size="small" @click="deletFun(scope.row)"
@@ -82,10 +86,10 @@ export default {
     Addminuser,
     Pagination,
   },
-     computed:{
-    isZiCompany(){
-      return this.$store.state.user?.userInfo?.user?.role === 1 //1是子公司
-    }
+  computed: {
+    isZiCompany() {
+      return this.$store.getters["user/userInfo"]?.user?.role === 1; //1是子公司
+    },
   },
   data() {
     return {
@@ -97,7 +101,7 @@ export default {
         limit: 10,
         sidx: "",
         order: "",
-        key:''
+        key: "",
       },
       minUserData: {},
     };
@@ -166,9 +170,9 @@ export default {
           console.log(err);
         });
     },
-    searchFun(){
+    searchFun() {
       this.reqop.page = 1;
-          this.getData();
+      this.getData();
     },
     modifyFin() {
       this.reqop.page = 1;

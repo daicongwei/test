@@ -103,17 +103,32 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  let token = localStorage.getItem('user')
-  if(to.name === 'login'){
+  let user = localStorage.getItem('user')
+  user && (user = JSON.parse(user))
+  // console.log(user);
+  // console.log(to.name);
+  if(to.name === 'login' || to.name === 'courseManagement'){
     next()
   }else{
-    if(token){
-      next()
+    if(user.token){
+      console.log(from);
+      // next()
+      if(from.name == 'login' && user?.user?.role === 0){
+        next({ path: '/home/courseManagement' })
+      }else{
+        next()
+      }
+      
     }else{
       next({ path: '/login' })
     }
   }
 
 })
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch(err => err)
+}
 
 export default router

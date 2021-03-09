@@ -33,6 +33,7 @@ export const apiUrl = {
     courselearnCond: { method: 'POST', url: '/train/course/learnCondition' },
 
     learnCondition: { method: 'GET', url: '/sys/companyinfo/learnCondition' },
+    settleaccounts: { method: 'POST', url: '/train/settleaccounts/list' },
 
 
     

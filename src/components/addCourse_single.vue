@@ -87,8 +87,13 @@
 </template>
 
 <script>
+
+import Upfile from "./upfile";
 export default {
   props: ["coursedata"],
+  components:{
+    Upfile
+  },
   data() {
     return {
       dialogImageUrl: "",

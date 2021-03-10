@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="添加系统用户"
+      :title="diaTitle"
       :visible.sync="ishow"
       width="35%"
       center
@@ -22,20 +22,18 @@
           <el-form-item label="密码" prop="password" >
             <el-input v-model="ruleForm.password" placeholder="长度8到16位"></el-input>
           </el-form-item>
-          <el-form-item label="用户角色" prop="role" >
-            <!-- <el-input v-model="ruleForm.role"></el-input> -->
+          <!-- <el-form-item label="用户角色" prop="role" >
             <el-radio-group v-model="ruleForm.role">
-              <el-radio label="0">主公司</el-radio>
-              <el-radio label="1">子公司</el-radio>
+              <el-radio :label="0">主公司</el-radio>
+              <el-radio :label="1">子公司</el-radio>
             </el-radio-group>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="联系方式" prop="mobile" >
             <el-input v-model="ruleForm.mobile" placeholder="请输入联系方式"></el-input>
           </el-form-item>
           <el-form-item
             label="所属公司"
             prop="companyId"
-            :required="ruleForm.role == 1"
           >
             <!-- <el-input v-model="ruleForm.companyId"></el-input> -->
             <el-select
@@ -71,14 +69,16 @@
 
 <script>
 export default {
+  props:['userdata'],
   data() {
     return {
       ishow: false,
       companyData: [],
+      diaTitle:'添加用户',
       ruleForm: {
         username: "",
         password: "",
-        role: "",
+        // role: "",
         mobile: "",
         companyId: "",
       },
@@ -87,7 +87,7 @@ export default {
           { required: true, message: "请输入用户名", trigger: "blur" },
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        role: [{ required: true, message: "请选择用户角色", trigger: "blur" }],
+        // role: [{ required: true, message: "请选择用户角色", trigger: "blur" }],
         mobile: [
           { required: true, message: "请输入联系方式", trigger: "blur" },
         ],
@@ -100,9 +100,9 @@ export default {
   methods: {
     submitForm(ruleForm) {
       //  this.$utils.isPhone(this.ruleForm.mobile)
-      if (this.ruleForm.role == 1) {
+      // if (this.ruleForm.role == 1) {
         this.$utils.isempty(this.ruleForm.companyId, "请选择所属公司");
-      }
+      // }
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.sumbit();
@@ -113,6 +113,19 @@ export default {
       });
     },
     sumbit() {
+      if(this.userdata?.userId){
+        this.$net
+        .userupdate(this.ruleForm)
+        .then((res) => {
+          this.$utils.toast("修改成功", "success");
+          this.close();
+          this.emptydata()
+          this.$emit('modifyFin',1)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      }else{
       this.$net
         .userSave(this.ruleForm)
         .then((res) => {
@@ -124,6 +137,7 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+      }
     },
 
     emptydata(){
@@ -146,6 +160,8 @@ export default {
         });
     },
     open() {
+      this.ruleForm = { ...this.userdata };
+      this.diaTitle = this.userdata?.userId?'修改系统用户':'添加系统用户'
       this.getcompanyData();
       this.ishow = true;
     },

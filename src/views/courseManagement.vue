@@ -236,6 +236,7 @@ export default {
         });
     },
     addFun() {
+      this.courseData = {}
       this.$refs["addcourse"].open();
     },
     toggleSelection(rows) {

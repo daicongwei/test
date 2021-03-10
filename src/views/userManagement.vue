@@ -39,6 +39,7 @@
       </el-table-column>
       <el-table-column prop="username" label="用户名"> </el-table-column>
       <el-table-column prop="password_show" label="用户密码"> </el-table-column>
+      <el-table-column prop="companyName" label="所属公司"> </el-table-column>
       <el-table-column prop="mobile" label="手机号"> </el-table-column>
       <el-table-column prop="createTime" label="添加时间"> </el-table-column>
       <el-table-column prop="createTime" label="操作" v-if="!isZiCompany">
@@ -49,6 +50,9 @@
           <!-- <el-button type="text" size="small" @click="modifypass(scope.row)">
             修改密码
           </el-button> -->
+          <el-button type="text" size="small" @click="modifyUser(scope.row)">
+            修改
+          </el-button>
           <el-button type="text" size="small" @click="delet(scope.row)">
             删除
           </el-button>
@@ -87,7 +91,7 @@ export default {
   },
   data() {
     return {
-      userdata: "",
+      userdata: {},
       tableData: [],
       total: 0,
       reqop: {
@@ -107,6 +111,7 @@ export default {
       this.reqop.page = 1
       this.getData();
     },
+   
     
     delet(val) {
       let that = this;
@@ -196,6 +201,12 @@ export default {
       this.multipleSelection = val;
     },
     adduserFun() {
+      this.userdata = {}
+      this.$refs["adduser"].open();
+    },
+     modifyUser(val){
+       val.password = ''
+        this.userdata = val;
       this.$refs["adduser"].open();
     },
   },

@@ -7,6 +7,7 @@ export const apiUrl = {
     userforbidden: { method: 'POST', url: '/sys/user/forbidden' },
     userdel: { method: 'GET', url: '/sys/user/delete/' },
     userpassword: { method: 'POST', url: '/sys/user/password' },
+    userupdate: { method: 'POST', url: '/sys/user/update' },
 
     companyAdd: { method: 'POST', url: '/sys/companyinfo/save' },
     companyList: { method: 'POST', url: '/sys/companyinfo/list' },

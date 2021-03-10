@@ -35,11 +35,22 @@
               placeholder="请输入公司简介"
             ></el-input>
           </el-form-item>
+          <el-form-item label="分账账户类型" prop="companyAccountType">
+            <el-select v-model="ruleForm.companyAccountType" placeholder="请选择公司分账账户类型" @change="accountchange">
+            <el-option label="微信商户号" value="MERCHANT_ID"></el-option>
+            <el-option label="微信个人账户" value="PERSONAL_OPENID"></el-option>
+          </el-select>
+            <!-- <el-input
+              v-model="ruleForm.introduction"
+              type="textarea"
+              placeholder="请输入公司简介"
+            ></el-input> -->
+          </el-form-item>
           
           <el-form-item label="公司账户" prop="companyAccount">
             <el-input
               v-model="ruleForm.companyAccount"
-              placeholder="请输入公司账户"
+              :placeholder="placeholderText"
             ></el-input>
           </el-form-item>
           <el-form-item label="公司电话" prop="mobile">
@@ -97,6 +108,7 @@ export default {
   data() {
     return {
       ishow: false,
+      placeholderText:'请输入微信商户号',
       rules: {
         companyName: [
           { required: true, message: "请输入公司名称", trigger: "blur" },
@@ -106,6 +118,9 @@ export default {
         ],
         introduction: [
           { required: true, message: "请输入公司简介", trigger: "blur" },
+        ],
+        companyAccountType: [
+          { required: true, message: "请选择公司分账账户类型", trigger: "blur" },
         ],
         // logo: [
         //   { required: true, message: "请输入logo图片地址", trigger: "blur" },
@@ -125,6 +140,7 @@ export default {
         ],
       },
       ruleForm: {
+        companyAccountType:'',
         companyName: "",
         address: "",
         introduction: "",
@@ -140,18 +156,24 @@ export default {
   },
 
   methods: {
+    accountchange(e){
+      // console.log(e);
+      this.placeholderText = (e == 'MERCHANT_ID')?'请输入微信商户号':'请填写微信个人账户openid';
+    },
     fileChangeFun(e){
       // console.log(e);
       this.ruleForm.logo = e
     },
 
     submitForm(ruleForm) {
+      // console.log(this.ruleForm);
       //  this.$utils.isPhone(this.ruleForm.mobile)
       let num = Number(this.ruleForm.profitSharing);
       if (num < 1 && num > 0) {
         this.$refs[ruleForm].validate((valid) => {
           if (valid) {
             this.$utils.isempty(this.ruleForm.logo,'请上传公司logo')
+            console.log(this.ruleForm);
             this.sumbit();
           } else {
             this.$utils.toast("公司信息不能为空");

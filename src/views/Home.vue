@@ -26,7 +26,7 @@
           <span slot="title">子公司管理</span>
         </el-menu-item>
 
-        <el-menu-item index="/home/userManagement">
+        <el-menu-item index="/home/userManagement" v-if="!isZiCompany">
           <i class="el-icon-setting"></i>
           <span slot="title">系统用户管理</span>
         </el-menu-item>

@@ -212,6 +212,7 @@ export default {
     },
 
     addminuserFun() {
+      this.minUserData = {}
       this.$refs["addminuser"].open();
     },
   },
